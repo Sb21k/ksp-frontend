@@ -5,8 +5,8 @@ import Homepage from './pages/Homepage';
 import ArticleDetail from './pages/ArticleDetail';
 import CreateEditArticle from './pages/CreateEditArticle';
 import Navbar from './components/Navbar'
+import Dashboard from './pages/Dashboard';
 
-const Dashboard = () => <h1>My Articles Dashboard</h1>;
 
 
 function App(){

@@ -17,7 +17,6 @@ const CreateEditArticle = () => {
     const [isAILoading, setIsAILoading] = useState(false);
     const [error, setError] = useState('');
 
-    // If editing, fetch the existing article data
     useEffect(() => {
         if (id) {
             const fetchArticle = async () => {

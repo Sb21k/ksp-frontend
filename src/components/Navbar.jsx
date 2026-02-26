@@ -8,7 +8,7 @@ const Navbar = ()=>{
     const userString = localStorage.getItem('user');
     const user = userString ? JSON.parse(userString) :null;
 
-    const handleLoogout = ()=>{
+    const handleLogout = ()=>{
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         navigate('/login');
@@ -24,7 +24,6 @@ const Navbar = ()=>{
             borderBottom: '1px solid #333',
             color: 'white' 
         }}>
-            {/* Logo / Brand */}
             <div>
                 <Link to="/" style={{ color: '#fff', textDecoration: 'none', fontSize: '1.5rem', fontWeight: 'bold' }}>
                     KSP<span style={{ color: '#8a2be2' }}>.ai</span>

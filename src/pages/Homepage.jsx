@@ -8,6 +8,13 @@ const Homepage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // for filter states
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const[selectedCategory, setSelectedCategory] = useState('');
+
+    
+    
     useEffect(() => {
         const fetchArticles = async () => {
             try {
@@ -26,17 +33,49 @@ const Homepage = () => {
     if (loading) return <h2>Loading latest articles...</h2>;
     if (error) return <h2 style={{ color: 'red' }}>{error}</h2>;
 
+
+    const uniqueCategories = [...new Set(articles.map( article => article.category))];
+    const filteredArticles = articles.filter(article =>{
+        const matchSearch = article.title?.toLowerCase().includes(searchTerm.toLowerCase()) || article.short?.toLowerCase().includes(searchTerm.toLowerCase()) || article.tags?.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchecategory = selectedCategory === "" || article.category === selectedCategory;
+
+        return matchSearch && matchecategory;
+    });
+
     return (
         <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
             <h1>Explore Articles</h1>
-
-            {/* We will add the Search & Filter bar here later */}
+            <div style={{ 
+                display: 'flex', gap: '15px', marginTop: '20px', marginBottom: '30px',
+                backgroundColor: '#2a2a2a', padding: '15px', borderRadius: '8px'
+            }}>
+                <input 
+                    type="text" 
+                    placeholder="Search by title, content, or tags..." 
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{ flex: 2, padding: '10px', borderRadius: '4px', border: '1px solid #444', backgroundColor: '#333', color: 'white' }}
+                />
+                
+                {/* Category Filter Dropdown */}
+                <select 
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    style={{ flex: 1, padding: '10px', borderRadius: '4px', border: '1px solid #444', backgroundColor: '#333', color: 'white' }}
+                >
+                    <option value="">All Categories</option>
+                    {uniqueCategories.map(category => (
+                        <option key={category} value={category}>{category}</option>
+                    ))}
+                </select>
+            </div>
+            
 
             <div className="page-wrapper">
-                {articles.length === 0 ? (
+                {filteredArticles.length === 0 ? (
                     <p>No articles found. Log in and be the first to write one!</p>
                 ) : (
-                    articles.map((article) => (
+                    filteredArticles.map((article) => (
                         <div key={article.id} style={{
                             border: '1px solid #ddd',
                             padding: '20px',
@@ -52,6 +91,9 @@ const Homepage = () => {
                                     {new Date(article.created_at).toLocaleDateString()}
                                 </span>
                             </div>
+                            <p style={{ lineHeight: '1.6', color: '#ddd' }}>
+                                {article.short?.replace(/<[^>]*>?/gm, '')}...
+                            </p>
 
                             <p style={{ lineHeight: '1.6' }}>{article.short}...</p>
 
