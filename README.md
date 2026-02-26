@@ -1,48 +1,40 @@
-Knowledge Sharing Platform with AI Assist 🚀
-A full-stack, AI-enhanced technical article publishing platform. This project allows registered users to author, format, and publish articles using a Rich Text Editor, complete with a mocked AI Writing Assistant. Public users can browse, search, and filter published content.
+# Knowledge Sharing Platform with AI Assist 🚀
 
-Author: Satyavrat Bind (PG-DAC)
+A full-stack, AI-enhanced technical article publishing platform. This project allows registered users to author, format, and publish articles using a Rich Text Editor, complete with a mocked AI Writing Assistant. Public users can browse, search, and filter published content. 
 
-🎥 Project Demo
+**Author:** Satyavrat Bind (PG-DAC)
 
-Demo Video: [Insert your Public Google Drive Link Here] (The video demonstrates Signup/Login, Article Creation, AI Assist usage, Edit/Delete, and Search/Filters) 
-+1
+## 🎥 Project Demo
+* **Demo Video:** [Insert your Public Google Drive Link Here]
+*(The video demonstrates Signup/Login, Article Creation, AI Assist usage, Edit/Delete, and Search/Filters)*
 
-🏗️ 1. Approach & Architecture 
+## 🏗️ 1. Approach & Architecture
 
 This application is built using a decoupled client-server architecture:
+* **Frontend:** ReactJS (bootstrapped with Vite) handling the UI, client-side routing (`react-router-dom`), and state management.
+* **Backend:** Node.js with Express providing a RESTful API interface.
+* **Database:** MySQL relational database utilizing the `mysql2` promise wrapper for asynchronous queries.
+* **Authentication:** Stateless JSON Web Tokens (JWT). Passwords are cryptographically hashed using `bcryptjs` before entering the database.
 
+### Key Design Decisions
+1.  **Client-Side Filtering:** To ensure a snappy UI, the Home page fetches all active articles once and uses React state to filter by search terms and categories instantly, reducing database read loads.
+2.  **Mocked AI Integration:** The AI "Improve with AI" feature uses a simulated asynchronous delay to append an enhancement tag and stylized text, fulfilling the functional AI assistant requirement without exposing paid API keys in a public repository.
+3.  **Idempotent Updates:** The article update (`PUT`) route is fully idempotent, allowing users to safely resubmit edits without creating duplicate database entries.
 
-Frontend: ReactJS (bootstrapped with Vite) handling the UI, client-side routing (react-router-dom), and state management. 
+## 📂 2. Folder Structure
 
-
-Backend: Node.js with Express providing a RESTful API interface. 
-
-
-Database: MySQL relational database utilizing the mysql2 promise wrapper for asynchronous queries. 
-
-Authentication: Stateless JSON Web Tokens (JWT). Passwords are cryptographically hashed using bcryptjs before entering the database. 
-
-Key Design Decisions 
-
-Client-Side Filtering: To ensure a snappy UI, the Home page fetches all active articles once and uses React state to filter by search terms and categories instantly, reducing database read loads.
-
-
-Mocked AI Integration: The AI "Improve with AI" feature uses a simulated asynchronous delay to append an enhancement tag and stylized text, fulfilling the functional AI assistant requirement without exposing paid API keys in a public repository. 
-+1
-
-Idempotent Updates: The article update (PUT) route is fully idempotent, allowing users to safely resubmit edits without creating duplicate database entries.
-
-📂2. Folder Structure
-ksp-frontend
+### Frontend (`ksp-frontend`)
+```text
 src/
 ├── api/          # Axios configuration and interceptors
 ├── components/   # Reusable UI elements (Navbar)
 ├── pages/        # Core views (Home, Login, Signup, Dashboard, ArticleDetail, CreateEditArticle)
 ├── App.jsx       # Main application routing hub
 └── main.jsx      # React entry point
+```
 
-ksp-backend
+### Backend (`ksp-backend`)
+```text
 /
 ├── config/       # Database connection pool setup (db.js)
 ├── controllers/  # Core business logic (authController, articleController)
@@ -50,29 +42,51 @@ ksp-backend
 ├── routes/       # API route definitions
 ├── .env          # Environment variables (Ignored by Git)
 └── server.js     # Express server initialization
+```
 
-🤖 3. AI Usage Documentation (Mandatory) 
+## 🤖 3. AI Usage Documentation (Mandatory)
 
-During the development of this project, I utilized Gemini as an AI-powered developer tool to accelerate the build process and debug complex issues. 
+During the development of this project, I utilized **Gemini** as an AI-powered developer tool to accelerate the build process and debug complex issues.
 
+**Where AI Helped:**
+* **Code Generation:** Scaffolded the initial Express boilerplate, standard CRUD controller layouts, and the React Router configuration.
+* **SQL Queries:** Assisted in writing efficient `JOIN` queries to map `auth_id` to usernames for the public article feeds.
+* **UI Ideas & Styling:** Helped clear out Vite's default conflicting CSS resets to establish a clean, centered layout with a dark-mode UI theme.
+* **Debugging:** Rapidly identified HTTP 404 routing traps (missing slashes in `app.use` paths) and Postman JSON payload headers.
 
-Where AI Helped: 
+**What I Reviewed and Corrected Manually:**
+* **Database Schema:** The AI initially hallucinated column names (e.g., using `author_id` instead of `auth_id`). I manually reviewed and mapped the SQL queries to match my exact MySQL schema.
+* **Security & Env Vars:** I manually extracted all sensitive database credentials and JWT secrets generated by the AI into a `.env` file to ensure security best practices were met before pushing to GitHub.
+* **Syntax Typos:** Corrected object destructuring errors (`{}`) provided by the AI into array destructuring (`[]`) to properly handle `mysql2` result objects.
 
-Code Generation: Scaffolded the initial Express boilerplate, standard CRUD controller layouts, and the React Router configuration. 
+**Example of AI Workflow:**
+> *"Used Gemini to generate the initial JWT verification middleware. I then manually reviewed the code to ensure it was properly extracting the `Bearer` token from the header and securely attaching the decoded `req.user.id` to the request object so I could map articles to their authors."*
 
+## ⚙️ 4. Setup Instructions
 
-SQL Queries: Assisted in writing efficient JOIN queries to map author_id to usernames for the public article feeds. 
+### Prerequisites
+* Node.js installed (v16+)
+* MySQL Server installed and running locally
 
+### Environment Variables (.env)
+Create a `.env` file in the root of the **backend** repository with the following variables:
+```text
+PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=ksp_db
+JWT_SECRET=your_super_secret_key
+```
 
-UI Ideas & Styling: Helped clear out Vite's default conflicting CSS resets to establish a clean, centered layout with a dark-mode UI theme. 
+### Backend Setup
+1. Open terminal in the `ksp-backend` directory.
+2. Run `npm install` to download dependencies.
+3. Open your MySQL client and run the schema setup (creates `users` and `articles` tables).
+4. Run `npm run dev` to start the backend server on `http://localhost:3000`.
 
-Debugging: Rapidly identified HTTP 404 routing traps (missing slashes in app.use paths) and Postman JSON payload headers.
-
-
-What I Reviewed and Corrected Manually: 
-
-Database Schema: The AI initially hallucinated column names (e.g., using author_id instead of auth_id). I manually reviewed and mapped the SQL queries to match my exact MySQL schema.
-
-Security & Env Vars: I manually extracted all sensitive database credentials and JWT secrets generated by the AI into a .env file to ensure security best practices were met before pushing to GitHub.
-
-Syntax Typos: Corrected object destructuring errors ({}) provided by the AI into array destructuring ([]) to properly handle mysql2 result objects.
+### Frontend Setup
+1. Open a new terminal in the `ksp-frontend` directory.
+2. Run `npm install` to download dependencies.
+3. Run `npm run dev` to start the Vite development server.
+4. Open the provided localhost link (usually `http://localhost:5173`) in your browser.
